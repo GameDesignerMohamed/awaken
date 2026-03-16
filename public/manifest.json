@@ -1,0 +1,16 @@
+{
+  "name": "Awaken",
+  "short_name": "Awaken",
+  "description": "Timed psychological interrupts for self-awareness",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F5F0E8",
+  "theme_color": "#F5F0E8",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+:root {
+  --parchment: #F5F0E8;
+  --parchment-dark: #E8E0D0;
+  --ink: #1A1A1A;
+  --ink-light: #4A4A4A;
+  --ink-faint: #8A8A7A;
+  --ember: #8B2500;
+
+  --font-body: 'Cormorant Garamond', 'Georgia', serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+  --font-display: 'Cormorant SC', 'Georgia', serif;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.5rem;
+  --text-hero: 3rem;
+
+  --space-page: 24px;
+  --space-section: 48px;
+  --space-paragraph: 24px;
+  --space-line: 8px;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: 1.7;
+  color: var(--ink);
+  background-color: var(--parchment);
+  min-height: 100dvh;
+}
+
+input,
+textarea,
+button {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  border-radius: 0;
+}
+
+input,
+textarea {
+  background: var(--parchment);
+  border: 1px solid var(--ink);
+  padding: 12px 16px;
+  line-height: 1.7;
+}
+
+input:focus,
+textarea:focus {
+  outline: 2px solid var(--ink);
+  outline-offset: -2px;
+}
+
+button {
+  cursor: pointer;
+  background: var(--ink);
+  color: var(--parchment);
+  border: 1px solid var(--ink);
+  padding: 12px 24px;
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  transition: opacity 200ms ease;
+}
+
+button:hover {
+  opacity: 0.85;
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+::placeholder {
+  color: var(--ink-faint);
+  font-style: italic;
+}
+
+/* Page transition */
+.page {
+  padding: var(--space-page);
+  min-height: 100dvh;
+  animation: fadeIn 400ms ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
