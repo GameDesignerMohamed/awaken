@@ -1,4 +1,4 @@
-run = "rm -rf node_modules && npm install && npm run build && npx serve dist -s -l 3000"
+run = "rm -rf node_modules && npm install && npm run build && npx serve dist -s -l tcp://0.0.0.0:3000"
 entrypoint = "src/main.tsx"
 
 [nix]
@@ -8,7 +8,7 @@ channel = "stable-24_11"
 PATH = "/home/runner/$REPL_SLUG/node_modules/.bin:$PATH"
 
 [deployment]
-run = ["sh", "-c", "npx serve dist -s -l 3000"]
+run = ["sh", "-c", "npx serve dist -s -l tcp://0.0.0.0:3000"]
 build = ["sh", "-c", "rm -rf node_modules && npm install && npm run build"]
 
 [[ports]]
