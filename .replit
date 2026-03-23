@@ -1,5 +1,6 @@
 run = "rm -rf node_modules && npm install && npm run build && npx serve dist -s -l tcp://0.0.0.0:3000"
 entrypoint = "src/main.tsx"
+modules = ["nodejs-20"]
 
 [nix]
 channel = "stable-24_11"
@@ -15,5 +16,33 @@ build = ["sh", "-c", "rm -rf node_modules && npm install && npm run build"]
 localPort = 3000
 externalPort = 80
 
+[[ports]]
+localPort = 5000
+externalPort = 80
+
 [agent]
 expertMode = true
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Start application"
+
+[[workflows.workflow]]
+name = "Start application"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run dev"
+waitForPort = 5000
+
+[workflows.workflow.metadata]
+outputType = "webview"
