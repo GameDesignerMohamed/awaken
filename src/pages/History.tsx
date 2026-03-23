@@ -274,6 +274,25 @@ export default function History() {
         ))
       )}
 
+      <Divider variant="dashed" />
+
+      <div style={{
+        textAlign: 'center',
+        padding: 'var(--space-paragraph) 0',
+      }}>
+        <p style={{
+          fontFamily: 'var(--font-body)',
+          fontSize: 'var(--text-sm)',
+          fontWeight: 600,
+          color: 'var(--ink-faint)',
+          lineHeight: 1.8,
+        }}>
+          Complete seven days of interrupts. After that, an AI coach will
+          arrive — one that reads your patterns, not your platitudes — to
+          guide you toward the life you keep describing but haven't built yet.
+        </p>
+      </div>
+
       <Divider variant="footer" />
     </main>
   )
