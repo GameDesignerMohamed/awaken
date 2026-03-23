@@ -17,6 +17,35 @@ interface GroupedResponses {
   responses: Response[]
 }
 
+const SCHEDULE = [
+  { slot: 1, time: '11:00', label: '11:00 AM' },
+  { slot: 2, time: '13:30', label: '1:30 PM' },
+  { slot: 3, time: '15:15', label: '3:15 PM' },
+  { slot: 4, time: '17:00', label: '5:00 PM' },
+  { slot: 5, time: '19:30', label: '7:30 PM' },
+  { slot: 6, time: '21:00', label: '9:00 PM' },
+]
+
+const PROMPTS: Record<number, string> = {
+  1: "What am I avoiding by doing what I'm doing?",
+  2: 'If someone filmed the last two hours, what would they conclude I want?',
+  3: 'Am I moving toward the life I hate or the life I want?',
+  4: "What's the most important thing I'm pretending isn't important?",
+  5: 'What did I do today from identity protection rather than genuine desire?',
+  6: 'When did I feel most alive today? Most dead?',
+}
+
+function getMissedSlots(answeredSlots: Set<number>): typeof SCHEDULE {
+  const now = new Date()
+  const currentMinutes = now.getHours() * 60 + now.getMinutes()
+
+  return SCHEDULE.filter(({ slot, time }) => {
+    const [h, m] = time.split(':').map(Number)
+    const slotMinutes = h * 60 + m
+    return slotMinutes <= currentMinutes && !answeredSlots.has(slot)
+  })
+}
+
 const MOCK_RESPONSES: Response[] = [
   {
     id: '1',
@@ -131,6 +160,60 @@ export default function History() {
       <div style={{ textAlign: 'right', marginBottom: 'var(--space-paragraph)' }}>
         <Link to="/onboard" className="nav-link">&sect; edit schedule</Link>
       </div>
+
+      {(() => {
+        const todayAnswered = new Set<number>()
+        const today = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+        for (const g of groups) {
+          if (g.date === today) {
+            for (const r of g.responses) todayAnswered.add(r.slot)
+          }
+        }
+        const missed = getMissedSlots(todayAnswered)
+        if (missed.length === 0) return null
+        return (
+          <div style={{ marginBottom: 'var(--space-section)' }}>
+            <Divider variant="dashed" />
+            <p className="mono-meta" style={{ marginBottom: 'var(--space-paragraph)' }}>
+              {missed.length} interrupt{missed.length > 1 ? 's' : ''} passed today — catch up now
+            </p>
+            {missed.map(({ slot, label }) => (
+              <Link
+                key={slot}
+                to={`/respond?slot=${slot}`}
+                style={{
+                  display: 'block',
+                  padding: '14px 0',
+                  borderBottom: '1px solid var(--parchment-dark)',
+                  textDecoration: 'none',
+                  color: 'var(--ink)',
+                }}
+              >
+                <span style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: 'var(--text-lg)',
+                  fontWeight: 700,
+                }}>
+                  &sect;{slot}
+                </span>
+                <span className="mono-meta" style={{ marginLeft: '12px' }}>
+                  {label}
+                </span>
+                <p style={{
+                  fontStyle: 'italic',
+                  fontSize: 'var(--text-sm)',
+                  fontWeight: 600,
+                  color: 'var(--ink-faint)',
+                  marginTop: '4px',
+                }}>
+                  &ldquo;{PROMPTS[slot]}&rdquo;
+                </p>
+              </Link>
+            ))}
+            <Divider variant="medium" />
+          </div>
+        )
+      })()}
 
       {MOCK_MODE && (
         <div className="mock-nav">
