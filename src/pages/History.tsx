@@ -287,9 +287,9 @@ export default function History() {
           color: 'var(--ink-faint)',
           lineHeight: 1.8,
         }}>
-          Complete seven days of interrupts. After that, an AI coach will
-          arrive — one that reads your patterns, not your platitudes — to
-          guide you toward the life you keep describing but haven't built yet.
+          Complete seven days of interrupts. After that, an AI coach
+          will analyze your responses — finding patterns you can't see
+          yourself — and guide you toward the changes you keep talking about.
         </p>
       </div>
 
