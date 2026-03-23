@@ -25,21 +25,27 @@ export default function PromptCard({ prompt, onSubmit, submitting, initialDraft 
 
   return (
     <form onSubmit={handleSubmit}>
-      <p style={{
+      <p className="drop-cap" style={{
         fontFamily: 'var(--font-body)',
         fontSize: 'var(--text-lg)',
-        lineHeight: 1.7,
-        marginBottom: 'var(--space-paragraph)',
-        fontStyle: 'italic',
+        fontWeight: 600,
+        lineHeight: 1.75,
+        marginBottom: 'var(--space-section)',
       }}>
-        &ldquo;{prompt}&rdquo;
+        {prompt}
       </p>
+
+      {initialDraft && (
+        <p className="mono-meta" style={{ marginBottom: 'var(--space-line)' }}>
+          draft restored from earlier.
+        </p>
+      )}
 
       <textarea
         value={response}
         onChange={(e) => handleChange(e.target.value)}
         placeholder="Write your response..."
-        rows={6}
+        rows={7}
         style={{
           width: '100%',
           resize: 'vertical',
@@ -48,7 +54,7 @@ export default function PromptCard({ prompt, onSubmit, submitting, initialDraft 
       />
 
       <button type="submit" disabled={!response.trim() || submitting} style={{ width: '100%' }}>
-        {submitting ? 'Submitting...' : 'Submit \u25B8'}
+        {submitting ? 'Submitting...' : 'Submit'}
       </button>
     </form>
   )

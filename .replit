@@ -1,0 +1,20 @@
+run = "npm run dev -- --host 0.0.0.0"
+entrypoint = "src/main.tsx"
+
+[nix]
+channel = "stable-24_05"
+
+[env]
+PATH = "/home/runner/$REPL_SLUG/node_modules/.bin:$PATH"
+
+[deployment]
+run = ["sh", "-c", "npm run build && npx serve dist -s -l 3000"]
+build = ["sh", "-c", "npm install && npm run build"]
+
+[[ports]]
+localPort = 3000
+externalPort = 80
+
+[[ports]]
+localPort = 5173
+externalPort = 3001

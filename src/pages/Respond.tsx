@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { useSearchParams } from 'react-router-dom'
-import { supabase } from '../lib/supabase'
+import { useSearchParams, Link } from 'react-router-dom'
+import { supabase, MOCK_MODE } from '../lib/supabase'
 import SectionMarker from '../components/SectionMarker'
 import PromptCard from '../components/PromptCard'
 import Divider from '../components/Divider'
@@ -14,6 +14,15 @@ const PROMPTS: Record<number, string> = {
   6: 'When did I feel most alive today? Most dead?',
 }
 
+const SLOT_TIMES: Record<number, string> = {
+  1: '11:00 AM',
+  2: '1:30 PM',
+  3: '3:15 PM',
+  4: '5:00 PM',
+  5: '7:30 PM',
+  6: '9:00 PM',
+}
+
 export default function Respond() {
   const [searchParams] = useSearchParams()
   const slotParam = searchParams.get('slot')
@@ -23,6 +32,7 @@ export default function Respond() {
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
+  const [showPrompt, setShowPrompt] = useState(false)
 
   const storageKey = `awaken-draft-${slot}`
 
@@ -37,16 +47,20 @@ export default function Respond() {
     }
   }, [draft, storageKey, prompt])
 
+  useEffect(() => {
+    const t = setTimeout(() => setShowPrompt(true), 800)
+    return () => clearTimeout(t)
+  }, [])
+
   if (!prompt || isNaN(slot) || slot < 1 || slot > 6) {
     return (
-      <div className="page" style={{ textAlign: 'center', paddingTop: 'var(--space-section)' }}>
-        <SectionMarker label="Error" />
-        <p style={{ fontSize: 'var(--text-base)' }}>
-          Invalid interrupt slot.
+      <div className="page" style={{ maxWidth: '480px', margin: '0 auto' }}>
+        <SectionMarker label="?" />
+        <p className="drop-cap" style={{ fontSize: 'var(--text-base)', fontWeight: 700 }}>
+          Invalid interrupt slot. This link may have expired or is malformed.
+          Return to the beginning and try again.
         </p>
-        <p style={{ fontSize: 'var(--text-sm)', color: 'var(--ink-faint)', marginTop: 'var(--space-line)' }}>
-          This link may have expired or is malformed.
-        </p>
+        <Divider variant="footer" />
       </div>
     )
   }
@@ -55,9 +69,16 @@ export default function Respond() {
     setSubmitting(true)
     setError('')
 
+    if (MOCK_MODE) {
+      await new Promise(r => setTimeout(r, 400))
+      localStorage.removeItem(storageKey)
+      setSubmitted(true)
+      setSubmitting(false)
+      return
+    }
+
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) {
-      // Session expired — draft is already in localStorage
       setError('Session expired. Please sign in again — your response is saved locally.')
       setSubmitting(false)
       return
@@ -82,53 +103,70 @@ export default function Respond() {
 
   if (submitted) {
     return (
-      <div className="page" style={{ textAlign: 'center', paddingTop: 'var(--space-section)' }}>
-        <SectionMarker label="Done" />
+      <main className="page" style={{ maxWidth: '480px', margin: '0 auto' }}>
+        <SectionMarker label={String(slot)} />
+
         <Divider variant="medium" />
-        <p style={{ fontSize: 'var(--text-lg)', marginTop: 'var(--space-paragraph)' }}>
-          Response recorded.
-        </p>
-        <p style={{
-          fontFamily: 'var(--font-mono)',
-          fontSize: 'var(--text-xs)',
-          color: 'var(--ink-faint)',
+
+        <p className="drop-cap" style={{
+          fontSize: 'var(--text-base)',
+          fontWeight: 600,
           marginTop: 'var(--space-paragraph)',
+          marginBottom: 'var(--space-paragraph)',
         }}>
-          Interrupt {slot} of 6
+          Response recorded. The act of writing it down is the act of seeing.
+          What you cannot name, you cannot change.
         </p>
-        <Divider variant="elaborate" />
-      </div>
+
+        <Divider variant="dashed" />
+
+        <p className="mono-meta" style={{ textAlign: 'center' }}>
+          interrupt {slot} of 6
+        </p>
+
+        <Link to="/history" className="nav-link" style={{ display: 'block', textAlign: 'center', marginTop: 'var(--space-paragraph)' }}>
+          &sect; view your reflections
+        </Link>
+
+        <Divider variant="footer" />
+      </main>
     )
   }
 
   return (
-    <div className="page" style={{ maxWidth: '480px', margin: '0 auto' }}>
-      <SectionMarker label="Interrupt" />
+    <main className="page" aria-label="Respond to interrupt" style={{ maxWidth: '480px', margin: '0 auto' }}>
+      <SectionMarker label={String(slot)} />
 
-      <PromptCard
-        prompt={prompt}
-        onSubmit={handleSubmit}
-        submitting={submitting}
-        initialDraft={draft}
-        onDraftChange={setDraft}
-      />
-
-      {error && (
-        <p style={{ color: 'var(--ember)', fontSize: 'var(--text-sm)', marginTop: 'var(--space-paragraph)' }}>
-          {error}
-        </p>
-      )}
-
-      <Divider variant="medium" />
-
-      <p style={{
-        fontFamily: 'var(--font-mono)',
-        fontSize: 'var(--text-xs)',
-        color: 'var(--ink-faint)',
-        textAlign: 'center',
-      }}>
-        Interrupt {slot} of 6
+      <p className="mono-meta" style={{ marginBottom: 'var(--space-paragraph)' }}>
+        {SLOT_TIMES[slot]} · interrupt {slot} of 6
       </p>
-    </div>
+
+      {showPrompt ? (
+        <div style={{ animation: 'fadeIn 400ms ease-in-out' }}>
+          <PromptCard
+            prompt={prompt}
+            onSubmit={handleSubmit}
+            submitting={submitting}
+            initialDraft={draft}
+            onDraftChange={setDraft}
+          />
+
+          {error && (
+            <p style={{
+              color: 'var(--ember)',
+              fontSize: 'var(--text-sm)',
+              fontWeight: 700,
+              marginTop: 'var(--space-paragraph)',
+            }}>
+              {error}
+            </p>
+          )}
+
+          <Divider variant="dashed" />
+        </div>
+      ) : null}
+
+      <Divider variant="footer" />
+    </main>
   )
 }

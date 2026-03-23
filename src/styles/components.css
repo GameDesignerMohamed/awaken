@@ -1,67 +1,109 @@
-/* PromptCard */
-.prompt-card {
-  margin-bottom: var(--space-section);
-}
-
-.prompt-card textarea {
-  width: 100%;
-  resize: vertical;
-  min-height: 120px;
-}
-
-/* Section markers */
-.section-marker {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--ink-light);
-  margin-bottom: var(--space-paragraph);
-}
-
-/* Dividers */
-.divider {
-  text-align: center;
-  color: var(--ink-faint);
-  font-size: var(--text-sm);
-  padding: var(--space-paragraph) 0;
-  letter-spacing: 0.2em;
-  user-select: none;
-}
-
 /* Time picker */
 input[type="time"] {
   font-family: var(--font-mono);
   font-size: var(--text-sm);
-  padding: 8px 12px;
+  font-weight: 600;
+  padding: 10px 14px;
+  border: 2px solid var(--ink);
+  background: var(--parchment-light);
 }
 
-/* History entry */
-.history-date {
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  color: var(--ink-light);
-  border-bottom: 1px solid var(--parchment-dark);
-  padding-bottom: var(--space-line);
-  margin-bottom: var(--space-paragraph);
+input[type="time"]:focus {
+  box-shadow: 3px 3px 0 var(--ink);
 }
 
-.history-meta {
+/* Textarea */
+textarea {
+  min-height: 140px;
+  font-weight: 600;
+  font-size: var(--text-base);
+  line-height: 1.65;
+}
+
+/* Monospace metadata */
+.mono-meta {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
+  font-weight: 600;
   color: var(--ink-faint);
-  margin-bottom: var(--space-line);
+  letter-spacing: 0.06em;
 }
 
+/* History date rule — heavy line above date */
+.history-date-rule {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--ink);
+  padding-bottom: var(--space-line);
+  margin-bottom: var(--space-paragraph);
+  border-bottom: 2.5px solid var(--ink);
+  letter-spacing: 0.04em;
+}
+
+/* History prompt — italic serif */
 .history-prompt {
   font-style: italic;
   font-size: var(--text-base);
+  font-weight: 600;
   color: var(--ink-light);
   margin-bottom: var(--space-line);
+  line-height: 1.65;
 }
 
+/* History response — dense body text */
 .history-response {
   font-size: var(--text-base);
-  line-height: 1.7;
+  font-weight: 600;
+  line-height: 1.65;
   margin-bottom: var(--space-paragraph);
+}
+
+/* Mock mode nav */
+.mock-nav {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--ink-faint);
+  text-align: center;
+  margin-bottom: var(--space-paragraph);
+  padding: 10px;
+  border: 2px dashed var(--ink-faint);
+}
+
+.mock-nav a {
+  color: var(--ink-light);
+  margin: 0 6px;
+  font-weight: 700;
+}
+
+/* Navigation links between pages */
+.nav-link {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--ink-faint);
+  letter-spacing: 0.06em;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Error text */
+.error-text {
+  color: var(--ember);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  margin-top: var(--space-line);
+}
+
+/* Touch target minimums */
+input[type="time"] {
+  min-height: 44px;
+}
+
+.mock-nav a {
+  display: inline-block;
+  min-height: 44px;
+  line-height: 44px;
+  padding: 0 8px;
 }

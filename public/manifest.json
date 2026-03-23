@@ -4,8 +4,8 @@
   "description": "Timed psychological interrupts for self-awareness",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#F5F0E8",
-  "theme_color": "#F5F0E8",
+  "background_color": "#C9C4BA",
+  "theme_color": "#C9C4BA",
   "icons": [
     {
       "src": "/favicon.svg",

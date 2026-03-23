@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { supabase } from '../lib/supabase'
+import { Link } from 'react-router-dom'
+import { supabase, MOCK_MODE } from '../lib/supabase'
 import SectionMarker from '../components/SectionMarker'
 import Divider from '../components/Divider'
 
@@ -16,61 +17,149 @@ interface GroupedResponses {
   responses: Response[]
 }
 
+const MOCK_RESPONSES: Response[] = [
+  {
+    id: '1',
+    slot: 1,
+    prompt_text: "What am I avoiding by doing what I'm doing?",
+    response_text: "I've been scrolling instead of writing the proposal. I think I'm afraid it won't be good enough — that the ideas I have aren't original enough to justify putting them out there. The scrolling feels productive because I'm \"researching\" but I know that's a lie I tell myself. The research is a ritual to avoid the terrifying blankness of the page.",
+    responded_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: '2',
+    slot: 2,
+    prompt_text: 'If someone filmed the last two hours, what would they conclude I want?',
+    response_text: "They'd conclude I want comfort and distraction. I kept opening the fridge, checking my phone, reorganizing my desk. Anything to avoid the blank page. The observer would see someone who is afraid of their own ambitions, someone who has chosen the path of least resistance so many times it has become a highway.",
+    responded_at: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: '3',
+    slot: 3,
+    prompt_text: 'Am I moving toward the life I hate or the life I want?',
+    response_text: "Honestly, toward the life I hate. The comfortable one. The one where I never risk anything and end up wondering what could have been. Every hour I spend avoiding the work is another step toward the person I promised myself I would never become. The gap between who I am and who I could be grows wider with each comfortable decision.",
+    responded_at: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
+  },
+  {
+    id: '4',
+    slot: 1,
+    prompt_text: "What am I avoiding by doing what I'm doing?",
+    response_text: "I spent the morning in meetings that didn't need me. I volunteered for them. It felt productive but it was hiding — from the hard creative work I said I'd do this week. The meetings are a socially acceptable excuse for cowardice. Nobody questions a full calendar.",
+    responded_at: new Date(Date.now() - 26 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: '5',
+    slot: 4,
+    prompt_text: "What's the most important thing I'm pretending isn't important?",
+    response_text: "My health. I keep saying I'll start exercising next week. It's been months of next weeks. My body is the vehicle for everything I want to accomplish and I'm treating it like it's disposable. I treat my laptop better than my body.",
+    responded_at: new Date(Date.now() - 25 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: '6',
+    slot: 6,
+    prompt_text: 'When did I feel most alive today? Most dead?',
+    response_text: "Most alive: the 20 minutes I spent playing guitar before dinner. My fingers remembered things my mind had forgotten. Most dead: the two hours of doom-scrolling after lunch. The contrast is so obvious it's embarrassing to write down. The guitar requires me to be present. The phone requires me to be absent.",
+    responded_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+  },
+]
+
 export default function History() {
   const [groups, setGroups] = useState<GroupedResponses[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
 
   useEffect(() => {
     const fetchResponses = async () => {
-      const { data } = await supabase
-        .from('responses')
-        .select('*')
-        .order('responded_at', { ascending: false })
+      let data: Response[]
 
-      if (data) {
-        const grouped = new Map<string, Response[]>()
-        for (const r of data as Response[]) {
-          const date = new Date(r.responded_at).toLocaleDateString('en-US', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-          })
-          if (!grouped.has(date)) grouped.set(date, [])
-          grouped.get(date)!.push(r)
+      if (MOCK_MODE) {
+        data = MOCK_RESPONSES
+      } else {
+        try {
+          const result = await supabase
+            .from('responses')
+            .select('*')
+            .order('responded_at', { ascending: false })
+          data = (result.data as Response[]) || []
+        } catch {
+          setError(true)
+          setLoading(false)
+          return
         }
-        setGroups(Array.from(grouped, ([date, responses]) => ({ date, responses })))
       }
+
+      const grouped = new Map<string, Response[]>()
+      for (const r of data) {
+        const date = new Date(r.responded_at).toLocaleDateString('en-US', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        })
+        if (!grouped.has(date)) grouped.set(date, [])
+        grouped.get(date)!.push(r)
+      }
+      setGroups(Array.from(grouped, ([date, responses]) => ({ date, responses })))
       setLoading(false)
     }
     fetchResponses()
   }, [])
 
-  if (loading) return null
+  if (loading) return (
+    <main className="page" style={{ maxWidth: '480px', margin: '0 auto' }}>
+      <SectionMarker label="H" pageNum={1} />
+      <Divider variant="medium" />
+      <p className="mono-meta" style={{ textAlign: 'center' }}>
+        loading reflections...
+      </p>
+    </main>
+  )
+
+  if (error) return (
+    <main className="page" style={{ maxWidth: '480px', margin: '0 auto' }}>
+      <SectionMarker label="H" pageNum={1} />
+      <p className="drop-cap" style={{ fontSize: 'var(--text-base)', fontWeight: 600 }}>
+        Unable to load your reflections. Check your connection and refresh the page.
+      </p>
+      <Divider variant="footer" />
+    </main>
+  )
 
   return (
-    <div className="page" style={{ maxWidth: '480px', margin: '0 auto' }}>
-      <SectionMarker label="History" />
+    <main className="page" aria-label="Response history" style={{ maxWidth: '480px', margin: '0 auto' }}>
+      <SectionMarker label="H" pageNum={1} />
+
+      <div style={{ textAlign: 'right', marginBottom: 'var(--space-paragraph)' }}>
+        <Link to="/onboard" className="nav-link">&sect; edit schedule</Link>
+      </div>
+
+      {MOCK_MODE && (
+        <div className="mock-nav">
+          mock mode — sample data
+          <div style={{ marginTop: '6px' }}>
+            {[1, 2, 3, 4, 5, 6].map(s => (
+              <Link key={s} to={`/respond?slot=${s}`}>&sect;{s}</Link>
+            ))}
+            <Link to="/onboard">onboard</Link>
+            <Link to="/">landing</Link>
+          </div>
+        </div>
+      )}
 
       {groups.length === 0 ? (
-        <div style={{ textAlign: 'center', paddingTop: 'var(--space-section)' }}>
-          <p style={{ fontSize: 'var(--text-base)', color: 'var(--ink-light)' }}>
-            No responses yet.
-          </p>
-          <p style={{ fontSize: 'var(--text-sm)', color: 'var(--ink-faint)', marginTop: 'var(--space-line)' }}>
-            Your reflections will appear here after you answer an interrupt.
+        <div>
+          <p className="drop-cap" style={{
+            fontSize: 'var(--text-base)',
+            fontWeight: 600,
+          }}>
+            No responses yet. Your reflections will appear here after you answer
+            an interrupt. The page will fill with evidence of your attention —
+            a record of every time you chose to see instead of look away.
           </p>
         </div>
       ) : (
         groups.map((group, gi) => (
           <div key={group.date}>
-            <h3 style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: 'var(--text-sm)',
-              color: 'var(--ink-light)',
-              borderBottom: '1px solid var(--parchment-dark)',
-              paddingBottom: 'var(--space-line)',
-              marginBottom: 'var(--space-paragraph)',
+            <h3 className="history-date-rule" style={{
               marginTop: gi > 0 ? 'var(--space-section)' : 0,
             }}>
               {group.date}
@@ -78,32 +167,18 @@ export default function History() {
 
             {group.responses.map((r, ri) => (
               <div key={r.id}>
-                <div style={{
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: 'var(--text-xs)',
-                  color: 'var(--ink-faint)',
-                  marginBottom: 'var(--space-line)',
-                }}>
+                <div className="mono-meta" style={{ marginBottom: 'var(--space-line)' }}>
                   {new Date(r.responded_at).toLocaleTimeString('en-US', {
                     hour: 'numeric',
                     minute: '2-digit',
                   })} &middot; &sect;{r.slot}
                 </div>
 
-                <p style={{
-                  fontStyle: 'italic',
-                  fontSize: 'var(--text-base)',
-                  color: 'var(--ink-light)',
-                  marginBottom: 'var(--space-line)',
-                }}>
+                <p className="history-prompt">
                   &ldquo;{r.prompt_text}&rdquo;
                 </p>
 
-                <p style={{
-                  fontSize: 'var(--text-base)',
-                  lineHeight: 1.7,
-                  marginBottom: 'var(--space-paragraph)',
-                }}>
+                <p className="history-response">
                   {r.response_text}
                 </p>
 
@@ -111,10 +186,12 @@ export default function History() {
               </div>
             ))}
 
-            <Divider variant="elaborate" />
+            {gi < groups.length - 1 && <Divider variant="medium" />}
           </div>
         ))
       )}
-    </div>
+
+      <Divider variant="footer" />
+    </main>
   )
 }
