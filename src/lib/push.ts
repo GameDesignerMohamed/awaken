@@ -1,4 +1,4 @@
-const VAPID_PUBLIC_KEY = import.meta.env.VITE_VAPID_PUBLIC_KEY as string
+const VAPID_PUBLIC_KEY = import.meta.env.VITE_VAPID_PUBLIC_KEY as string || 'BO1dyxWkihxOUxirhjcPtpA6dEkmPA5nBqLhLaRZhfdeJmNgQpykWrJ3sZeG1Rbeu7ZoPUAeYV1Op-ZafoSuLv8'
 
 function urlBase64ToUint8Array(base64String: string): Uint8Array {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
