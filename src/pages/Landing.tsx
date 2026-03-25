@@ -63,11 +63,23 @@ export default function Landing() {
         marginBottom: 'var(--space-paragraph)',
         lineHeight: 1.65,
       }}>
-        You are just today's face of The Change. That incontrovertible,
-        irreconcilable Change. Change that rivals Time as an adversary.
-        Six times each day, we fracture the autopilot that shields you
-        from seeing clearly. There is no innovation so small that you may
-        hide your hand.
+        Six times a day, Awaken sends you a question designed to break
+        your autopilot. Not affirmations. Not tips. Hard questions that
+        force you to notice what you're actually doing with your life —
+        right now, in this moment.
+      </p>
+
+      <p style={{
+        fontFamily: 'var(--font-body)',
+        fontSize: 'var(--text-sm)',
+        fontWeight: 600,
+        color: 'var(--ink-faint)',
+        marginBottom: 'var(--space-paragraph)',
+        lineHeight: 1.7,
+      }}>
+        You choose the times. We send the interrupts. You answer honestly.
+        After seven days, an AI coach analyzes your patterns and shows you
+        what you can't see yourself.
       </p>
 
       <Divider variant="dashed" />

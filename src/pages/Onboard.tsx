@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { supabase, MOCK_MODE } from '../lib/supabase'
 import { subscribeToPush, isNotificationSupported } from '../lib/push'
@@ -29,16 +29,10 @@ export default function Onboard() {
   const [schedule, setSchedule] = useState(DEFAULT_SCHEDULE)
   const [timezone] = useState(() => Intl.DateTimeFormat().resolvedOptions().timeZone)
   const [saving, setSaving] = useState(false)
-  const [showIOSPrompt, setShowIOSPrompt] = useState(false)
   const [pushGranted, setPushGranted] = useState(false)
   const [error, setError] = useState('')
   const [pushDenied, setPushDenied] = useState(false)
 
-  useEffect(() => {
-    if (isIOSSafari() && !isStandalone()) {
-      setShowIOSPrompt(true)
-    }
-  }, [])
 
   const updateTime = (slot: number, time: string) => {
     setSchedule(prev => prev.map(s => s.slot === slot ? { ...s, time } : s))
@@ -148,38 +142,65 @@ export default function Onboard() {
 
       <Divider variant="medium" />
 
-      {showIOSPrompt && !isStandalone() ? (
-        <div style={{ marginBottom: 'var(--space-section)' }}>
+      {!isStandalone() && (
+        <div style={{
+          marginBottom: 'var(--space-section)',
+          border: '2px solid var(--ink)',
+          padding: 'var(--space-paragraph)',
+        }}>
           <p style={{
             fontSize: 'var(--text-base)',
             fontWeight: 700,
             marginBottom: 'var(--space-paragraph)',
           }}>
-            To receive the interrupts, install Awaken on your Home Screen:
+            Install Awaken on your Home Screen
           </p>
-          <ol style={{
+          <p style={{
             fontSize: 'var(--text-sm)',
-            color: 'var(--ink-light)',
-            paddingLeft: '1.5em',
-            lineHeight: 2.2,
-            fontWeight: 600,
+            color: 'var(--ink-faint)',
+            marginBottom: 'var(--space-paragraph)',
+            lineHeight: 1.7,
           }}>
-            <li>Tap the Share button in Safari</li>
-            <li>Scroll down and tap "Add to Home Screen"</li>
-            <li>Open Awaken from your Home Screen</li>
-          </ol>
+            Notifications only work when Awaken is installed as an app.
+          </p>
+          {isIOSSafari() ? (
+            <ol style={{
+              fontSize: 'var(--text-base)',
+              color: 'var(--ink-light)',
+              paddingLeft: '1.5em',
+              lineHeight: 2.4,
+              fontWeight: 600,
+            }}>
+              <li>Tap the <strong>Share button</strong> <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-xs)' }}>(the square with an arrow pointing up, bottom of Safari)</span></li>
+              <li>Scroll down and tap <strong>"Add to Home Screen"</strong></li>
+              <li>Tap <strong>"Add"</strong> in the top right</li>
+              <li>Open <strong>Awaken</strong> from your Home Screen</li>
+            </ol>
+          ) : (
+            <ol style={{
+              fontSize: 'var(--text-base)',
+              color: 'var(--ink-light)',
+              paddingLeft: '1.5em',
+              lineHeight: 2.4,
+              fontWeight: 600,
+            }}>
+              <li>Tap the <strong>menu</strong> <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-xs)' }}>(three dots, top right of browser)</span></li>
+              <li>Tap <strong>"Add to Home Screen"</strong> or <strong>"Install App"</strong></li>
+              <li>Open <strong>Awaken</strong> from your Home Screen</li>
+            </ol>
+          )}
         </div>
-      ) : (
-        !pushGranted && (MOCK_MODE || isNotificationSupported()) && (
-          <div style={{ marginBottom: 'var(--space-section)', textAlign: 'center' }}>
-            <button onClick={requestPush}>
-              Enable Notifications
-            </button>
-            <p className="mono-meta" style={{ marginTop: 'var(--space-line)' }}>
-              {MOCK_MODE ? 'mock mode — simulated' : 'required for daily interrupts'}
-            </p>
-          </div>
-        )
+      )}
+
+      {isStandalone() && !pushGranted && !pushDenied && (MOCK_MODE || isNotificationSupported()) && (
+        <div style={{ marginBottom: 'var(--space-section)', textAlign: 'center' }}>
+          <button onClick={requestPush}>
+            Enable Notifications
+          </button>
+          <p className="mono-meta" style={{ marginTop: 'var(--space-line)' }}>
+            {MOCK_MODE ? 'mock mode — simulated' : 'required for daily interrupts'}
+          </p>
+        </div>
       )}
 
       {pushGranted && (
