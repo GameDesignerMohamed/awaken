@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { supabase, MOCK_MODE } from '../lib/supabase'
 import SectionMarker from '../components/SectionMarker'
 import Divider from '../components/Divider'
+import { ROMAN } from '../lib/constants'
 
 interface Response {
   id: string
@@ -15,10 +16,6 @@ interface Response {
 interface GroupedResponses {
   date: string
   responses: Response[]
-}
-
-const ROMAN: Record<number, string> = {
-  1: 'I', 2: 'II', 3: 'III', 4: 'IV', 5: 'V', 6: 'VI',
 }
 
 const SCHEDULE = [
@@ -198,7 +195,7 @@ export default function History() {
                   fontSize: 'var(--text-lg)',
                   fontWeight: 700,
                 }}>
-                  {ROMAN[slot]}.
+                  {ROMAN[slot] ?? slot}.
                 </span>
                 <span className="mono-meta" style={{ marginLeft: '12px' }}>
                   {label}
@@ -258,7 +255,7 @@ export default function History() {
                   {new Date(r.responded_at).toLocaleTimeString('en-US', {
                     hour: 'numeric',
                     minute: '2-digit',
-                  })} &middot; {ROMAN[r.slot]}
+                  })} &middot; {ROMAN[r.slot] ?? r.slot}
                 </div>
 
                 <p className="history-prompt">

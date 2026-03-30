@@ -4,6 +4,7 @@ import { supabase, MOCK_MODE } from '../lib/supabase'
 import SectionMarker from '../components/SectionMarker'
 import PromptCard from '../components/PromptCard'
 import Divider from '../components/Divider'
+import { ROMAN } from '../lib/constants'
 
 const PROMPTS: Record<number, string> = {
   1: 'What am I avoiding by doing what I\'m doing?',
@@ -12,10 +13,6 @@ const PROMPTS: Record<number, string> = {
   4: 'What\'s the most important thing I\'m pretending isn\'t important?',
   5: 'What did I do today from identity protection rather than genuine desire?',
   6: 'When did I feel most alive today? Most dead?',
-}
-
-const ROMAN: Record<number, string> = {
-  1: 'I', 2: 'II', 3: 'III', 4: 'IV', 5: 'V', 6: 'VI',
 }
 
 const SLOT_TIMES: Record<number, string> = {

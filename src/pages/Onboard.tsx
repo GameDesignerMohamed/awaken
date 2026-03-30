@@ -4,6 +4,7 @@ import { supabase, MOCK_MODE } from '../lib/supabase'
 import { subscribeToPush, isNotificationSupported } from '../lib/push'
 import SectionMarker from '../components/SectionMarker'
 import Divider from '../components/Divider'
+import { ROMAN } from '../lib/constants'
 
 const DEFAULT_SCHEDULE = [
   { slot: 1, time: '11:00' },
@@ -13,10 +14,6 @@ const DEFAULT_SCHEDULE = [
   { slot: 5, time: '19:30' },
   { slot: 6, time: '21:00' },
 ]
-
-const ROMAN: Record<number, string> = {
-  1: 'I', 2: 'II', 3: 'III', 4: 'IV', 5: 'V', 6: 'VI',
-}
 
 const DISPLAY_TIMES: Record<number, string> = {
   1: '11:00 AM',
