@@ -35,7 +35,7 @@ export default function Landing() {
 
   return (
     <main className="page" aria-label="Sign in with magic link" style={{ maxWidth: '460px', margin: '0 auto' }}>
-      <SectionMarker label="0" pageNum={1} />
+      <SectionMarker label="O." pageNum={1} />
 
       <div style={{ textAlign: 'center', marginBottom: 'var(--space-paragraph)' }}>
         <Divider variant="medium" />
@@ -77,7 +77,7 @@ export default function Landing() {
         marginBottom: 'var(--space-paragraph)',
         lineHeight: 1.7,
       }}>
-        You choose the times. We send the interrupts. You answer honestly.
+        Six fixed times. We send the interrupts. You answer honestly.
         After seven days, an AI coach analyzes your patterns and shows you
         what you can't see yourself.
       </p>

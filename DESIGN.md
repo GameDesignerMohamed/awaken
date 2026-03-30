@@ -69,7 +69,7 @@ https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,50
 |---------|--------|-----|
 | Body text, responses, prompts | 600 (semibold) | Matches the heavy, dense feel of the reference. Regular (400) is too thin for this aesthetic. |
 | Section markers §N, page headings | 700 (bold) | Anchors the page. Must be true 700, not synthetic. |
-| Monospace metadata | 500 (medium) | Visible but subordinate to the serif. |
+| Monospace metadata | 600 (semibold) | Matches body weight for visual consistency on parchment background. |
 | Placeholders, faint labels | 400 (regular) | Deliberately lighter to recede. |
 | Button labels (Cormorant SC) | 700 (bold) | Small caps + bold = typeset stamp quality. |
 
@@ -96,7 +96,7 @@ Color is earned in this design. The only non-grayscale color is ember, and it ap
 --parchment-light: #D4CFC6;   /* Slightly lighter — input backgrounds, inset areas */
 --ink:             #0A0A0A;   /* Near-black — primary text, borders, ornaments */
 --ink-light:       #1E1E1E;   /* Dark gray — secondary text */
---ink-faint:       #555550;   /* Medium gray — timestamps, metadata, placeholders */
+--ink-faint:       #4A4A45;   /* Medium gray — timestamps, metadata, placeholders */
 --ember:           #5C1508;   /* Deep burnt red — Phase 1 only: streak number, active states */
 ```
 
@@ -156,10 +156,11 @@ Content container has a max-width of 480px, centered. The parchment background e
 ## Ornamental System
 
 ### Section Markers
-Format: `§N` — where N is a section identifier (number or letter).
+Format: Roman numerals with period — `I.`, `II.`, `III.`, etc. for interrupt slots (1–6). Page identifiers use letters with period (`O.` for origin/landing, `H.` for history).
 - Font: Cormorant SC, weight 700, size `--text-2xl`
 - Positioned top-left of page
 - Paired with either a page number (top-right) or a cross ornament (top-right)
+- **Why not §?** The section sign (§) caused user confusion — most people outside legal/academic contexts don't recognize it. Roman numerals carry the same scholarly weight while being universally readable.
 
 ### Cross/Diamond Ornaments
 The primary decorative motif. Based on the @instance_11 reference: compass-rose shapes with cardinal dots, axis lines, center diamond, and diagonal accent dots.
@@ -237,3 +238,7 @@ The texture should be **visible** — not subtle. It's a key part of the aged pa
 | 2026-03-19 | Font loading: must include weight 700 | Synthetic bold (browser-faked) was making text look muddy. Loading true 700 weight is critical for the heavy serif to render correctly. |
 | 2026-03-19 | Section markers use Cormorant SC | Regular weight Cormorant Garamond for §N lacked the scholarly/typeset quality. SC (small caps) variant at 700 weight matches the reference's printed feel. |
 | 2026-03-19 | Type scale ratio ~1.25 | Previous scale had inconsistent jumps (17% then 29%). Regularized to ~1.25 ratio for proportional steps. |
+| 2026-03-30 | § → Roman numerals (I–VI) | User feedback: people didn't recognize the section sign (§). Roman numerals preserve scholarly weight while being universally legible. |
+| 2026-03-30 | Fixed schedule (no time pickers) | Phase 0 friction reduction: 6 time pickers added unnecessary friction. Default times are fine. Schedule saved as read-only display. |
+| 2026-03-30 | Removed PWA install prompt | The "Add to Home Screen" instruction wall blocked onboarding flow. Removed entirely to reduce friction. |
+| 2026-03-30 | Mono weight synced to 600 | DESIGN.md said 500, CSS shipped 600. Aligned doc to match what actually looks right on the parchment background. |

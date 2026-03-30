@@ -199,7 +199,7 @@ textarea:focus-visible {
   font-family: var(--font-body);
 }
 
-/* Page header: §N on left, ornament on right */
+/* Page header: section marker on left, ornament on right */
 .page-header {
   display: flex;
   justify-content: space-between;

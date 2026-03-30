@@ -14,6 +14,10 @@ const PROMPTS: Record<number, string> = {
   6: 'When did I feel most alive today? Most dead?',
 }
 
+const ROMAN: Record<number, string> = {
+  1: 'I', 2: 'II', 3: 'III', 4: 'IV', 5: 'V', 6: 'VI',
+}
+
 const SLOT_TIMES: Record<number, string> = {
   1: '11:00 AM',
   2: '1:30 PM',
@@ -55,7 +59,7 @@ export default function Respond() {
   if (!prompt || isNaN(slot) || slot < 1 || slot > 6) {
     return (
       <div className="page" style={{ maxWidth: '480px', margin: '0 auto' }}>
-        <SectionMarker label="?" />
+        <SectionMarker label="?" pageNum={0} />
         <p className="drop-cap" style={{ fontSize: 'var(--text-base)', fontWeight: 700 }}>
           Invalid interrupt slot. This link may have expired or is malformed.
           Return to the beginning and try again.
@@ -104,7 +108,7 @@ export default function Respond() {
   if (submitted) {
     return (
       <main className="page" style={{ maxWidth: '480px', margin: '0 auto' }}>
-        <SectionMarker label={String(slot)} />
+        <SectionMarker label={`${ROMAN[slot]}.`} />
 
         <Divider variant="medium" />
 
@@ -121,11 +125,11 @@ export default function Respond() {
         <Divider variant="dashed" />
 
         <p className="mono-meta" style={{ textAlign: 'center' }}>
-          interrupt {slot} of 6
+          interrupt {ROMAN[slot]} of VI
         </p>
 
         <Link to="/history" className="nav-link" style={{ display: 'block', textAlign: 'center', marginTop: 'var(--space-paragraph)' }}>
-          &sect; view your reflections
+          view your reflections
         </Link>
 
         <Divider variant="footer" />
@@ -135,10 +139,10 @@ export default function Respond() {
 
   return (
     <main className="page" aria-label="Respond to interrupt" style={{ maxWidth: '480px', margin: '0 auto' }}>
-      <SectionMarker label={String(slot)} />
+      <SectionMarker label={`${ROMAN[slot]}.`} />
 
       <p className="mono-meta" style={{ marginBottom: 'var(--space-paragraph)' }}>
-        {SLOT_TIMES[slot]} · interrupt {slot} of 6
+        {SLOT_TIMES[slot]} · interrupt {ROMAN[slot]} of VI
       </p>
 
       {showPrompt ? (

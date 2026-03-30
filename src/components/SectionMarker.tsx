@@ -27,7 +27,7 @@ function HeaderOrnament() {
 export default function SectionMarker({ label, pageNum }: { label: string; pageNum?: number }) {
   return (
     <div className="page-header">
-      <span className="page-header__section">&sect;{label}</span>
+      <span className="page-header__section">{label}</span>
       {pageNum !== undefined ? (
         <span className="page-header__section">{pageNum}</span>
       ) : (

@@ -14,29 +14,27 @@ const DEFAULT_SCHEDULE = [
   { slot: 6, time: '21:00' },
 ]
 
-function isIOSSafari(): boolean {
-  const ua = navigator.userAgent
-  return /iPad|iPhone|iPod/.test(ua) && !('MSStream' in window)
+const ROMAN: Record<number, string> = {
+  1: 'I', 2: 'II', 3: 'III', 4: 'IV', 5: 'V', 6: 'VI',
 }
 
-function isStandalone(): boolean {
-  return ('standalone' in navigator && (navigator as { standalone?: boolean }).standalone === true) ||
-    window.matchMedia('(display-mode: standalone)').matches
+const DISPLAY_TIMES: Record<number, string> = {
+  1: '11:00 AM',
+  2: '1:30 PM',
+  3: '3:15 PM',
+  4: '5:00 PM',
+  5: '7:30 PM',
+  6: '9:00 PM',
 }
 
 export default function Onboard() {
   const navigate = useNavigate()
-  const [schedule, setSchedule] = useState(DEFAULT_SCHEDULE)
   const [timezone] = useState(() => Intl.DateTimeFormat().resolvedOptions().timeZone)
   const [saving, setSaving] = useState(false)
   const [pushGranted, setPushGranted] = useState(false)
   const [error, setError] = useState('')
   const [pushDenied, setPushDenied] = useState(false)
 
-
-  const updateTime = (slot: number, time: string) => {
-    setSchedule(prev => prev.map(s => s.slot === slot ? { ...s, time } : s))
-  }
 
   const requestPush = async () => {
     if (MOCK_MODE) {
@@ -74,7 +72,7 @@ export default function Onboard() {
     const { error: upsertError } = await supabase.from('profiles').upsert({
       id: user.id,
       timezone,
-      interrupt_schedule: schedule,
+      interrupt_schedule: DEFAULT_SCHEDULE,
     })
 
     if (upsertError) {
@@ -89,10 +87,10 @@ export default function Onboard() {
 
   return (
     <main className="page" aria-label="Set interrupt schedule" style={{ maxWidth: '480px', margin: '0 auto' }}>
-      <SectionMarker label="1" />
+      <SectionMarker label="I." />
 
       <div style={{ textAlign: 'right', marginTop: '-12px', marginBottom: 'var(--space-paragraph)' }}>
-        <Link to="/history" className="nav-link">&sect; history</Link>
+        <Link to="/history" className="nav-link">history</Link>
       </div>
 
       <p className="drop-cap" style={{
@@ -102,25 +100,31 @@ export default function Onboard() {
         lineHeight: 1.65,
         marginBottom: 'var(--space-paragraph)',
       }}>
-        Set the six moments each day when we will interrupt your autopilot. These
-        are not reminders. They are fractures in the routine that protects you from
-        seeing clearly. Choose times when you are most likely to be operating on
-        automatic — the hours when habit governs and attention sleeps.
+        Six times a day, you'll receive a notification with a question.
+        Not advice. Not affirmations. A question that makes you stop and
+        notice what you're actually doing — and whether it's what you want.
       </p>
 
-      <p className="mono-meta" style={{ marginBottom: 'var(--space-section)' }}>
+      <p className="mono-meta" style={{ marginBottom: 'var(--space-line)' }}>
         timezone detected: {timezone}
       </p>
 
-      <Divider variant="dashed" />
+      <p style={{
+        fontFamily: 'var(--font-body)',
+        fontSize: 'var(--text-base)',
+        fontWeight: 600,
+        marginBottom: 'var(--space-line)',
+      }}>
+        Your interrupts are set to:
+      </p>
 
-      <div style={{ marginBottom: 'var(--space-paragraph)' }}>
-        {schedule.map(({ slot, time }) => (
+      <div style={{ marginBottom: 'var(--space-section)' }}>
+        {DEFAULT_SCHEDULE.map(({ slot }) => (
           <div key={slot} style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '14px 0',
+            padding: '10px 0',
             borderBottom: slot < 6 ? '1px solid var(--parchment-dark)' : 'none',
           }}>
             <span style={{
@@ -129,70 +133,22 @@ export default function Onboard() {
               fontWeight: 700,
               color: 'var(--ink)',
             }}>
-              &sect;{slot}
+              {ROMAN[slot]}.
             </span>
-            <input
-              type="time"
-              value={time}
-              onChange={(e) => updateTime(slot, e.target.value)}
-            />
+            <span style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 'var(--text-base)',
+              color: 'var(--ink-light)',
+            }}>
+              {DISPLAY_TIMES[slot]}
+            </span>
           </div>
         ))}
       </div>
 
       <Divider variant="medium" />
 
-      {!isStandalone() && (
-        <div style={{
-          marginBottom: 'var(--space-section)',
-          border: '2px solid var(--ink)',
-          padding: 'var(--space-paragraph)',
-        }}>
-          <p style={{
-            fontSize: 'var(--text-base)',
-            fontWeight: 700,
-            marginBottom: 'var(--space-paragraph)',
-          }}>
-            Install Awaken on your Home Screen
-          </p>
-          <p style={{
-            fontSize: 'var(--text-sm)',
-            color: 'var(--ink-faint)',
-            marginBottom: 'var(--space-paragraph)',
-            lineHeight: 1.7,
-          }}>
-            Notifications only work when Awaken is installed as an app.
-          </p>
-          {isIOSSafari() ? (
-            <ol style={{
-              fontSize: 'var(--text-base)',
-              color: 'var(--ink-light)',
-              paddingLeft: '1.5em',
-              lineHeight: 2.4,
-              fontWeight: 600,
-            }}>
-              <li>Tap the <strong>Share button</strong> <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-xs)' }}>(the square with an arrow pointing up, bottom of Safari)</span></li>
-              <li>Scroll down and tap <strong>"Add to Home Screen"</strong></li>
-              <li>Tap <strong>"Add"</strong> in the top right</li>
-              <li>Open <strong>Awaken</strong> from your Home Screen</li>
-            </ol>
-          ) : (
-            <ol style={{
-              fontSize: 'var(--text-base)',
-              color: 'var(--ink-light)',
-              paddingLeft: '1.5em',
-              lineHeight: 2.4,
-              fontWeight: 600,
-            }}>
-              <li>Tap the <strong>menu</strong> <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-xs)' }}>(three dots, top right of browser)</span></li>
-              <li>Tap <strong>"Add to Home Screen"</strong> or <strong>"Install App"</strong></li>
-              <li>Open <strong>Awaken</strong> from your Home Screen</li>
-            </ol>
-          )}
-        </div>
-      )}
-
-      {isStandalone() && !pushGranted && !pushDenied && (MOCK_MODE || isNotificationSupported()) && (
+      {!pushGranted && !pushDenied && (MOCK_MODE || isNotificationSupported()) && (
         <div style={{ marginBottom: 'var(--space-section)', textAlign: 'center' }}>
           <button onClick={requestPush}>
             Enable Notifications

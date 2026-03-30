@@ -17,6 +17,10 @@ interface GroupedResponses {
   responses: Response[]
 }
 
+const ROMAN: Record<number, string> = {
+  1: 'I', 2: 'II', 3: 'III', 4: 'IV', 5: 'V', 6: 'VI',
+}
+
 const SCHEDULE = [
   { slot: 1, time: '11:00', label: '11:00 AM' },
   { slot: 2, time: '13:30', label: '1:30 PM' },
@@ -135,7 +139,7 @@ export default function History() {
 
   if (loading) return (
     <main className="page" style={{ maxWidth: '480px', margin: '0 auto' }}>
-      <SectionMarker label="H" pageNum={1} />
+      <SectionMarker label="H." pageNum={1} />
       <Divider variant="medium" />
       <p className="mono-meta" style={{ textAlign: 'center' }}>
         loading reflections...
@@ -145,7 +149,7 @@ export default function History() {
 
   if (error) return (
     <main className="page" style={{ maxWidth: '480px', margin: '0 auto' }}>
-      <SectionMarker label="H" pageNum={1} />
+      <SectionMarker label="H." pageNum={1} />
       <p className="drop-cap" style={{ fontSize: 'var(--text-base)', fontWeight: 600 }}>
         Unable to load your reflections. Check your connection and refresh the page.
       </p>
@@ -155,10 +159,10 @@ export default function History() {
 
   return (
     <main className="page" aria-label="Response history" style={{ maxWidth: '480px', margin: '0 auto' }}>
-      <SectionMarker label="H" pageNum={1} />
+      <SectionMarker label="H." pageNum={1} />
 
       <div style={{ textAlign: 'right', marginBottom: 'var(--space-paragraph)' }}>
-        <Link to="/onboard" className="nav-link">&sect; edit schedule</Link>
+        <Link to="/onboard" className="nav-link">schedule</Link>
       </div>
 
       {(() => {
@@ -194,7 +198,7 @@ export default function History() {
                   fontSize: 'var(--text-lg)',
                   fontWeight: 700,
                 }}>
-                  &sect;{slot}
+                  {ROMAN[slot]}.
                 </span>
                 <span className="mono-meta" style={{ marginLeft: '12px' }}>
                   {label}
@@ -220,7 +224,7 @@ export default function History() {
           mock mode — sample data
           <div style={{ marginTop: '6px' }}>
             {[1, 2, 3, 4, 5, 6].map(s => (
-              <Link key={s} to={`/respond?slot=${s}`}>&sect;{s}</Link>
+              <Link key={s} to={`/respond?slot=${s}`}>{ROMAN[s]}</Link>
             ))}
             <Link to="/onboard">onboard</Link>
             <Link to="/">landing</Link>
@@ -254,7 +258,7 @@ export default function History() {
                   {new Date(r.responded_at).toLocaleTimeString('en-US', {
                     hour: 'numeric',
                     minute: '2-digit',
-                  })} &middot; &sect;{r.slot}
+                  })} &middot; {ROMAN[r.slot]}
                 </div>
 
                 <p className="history-prompt">
