@@ -1,4 +1,4 @@
-const VAPID_PUBLIC_KEY = import.meta.env.VITE_VAPID_PUBLIC_KEY as string || 'BO1dyxWkihxOUxirhjcPtpA6dEkmPA5nBqLhLaRZhfdeJmNgQpykWrJ3sZeG1Rbeu7ZoPUAeYV1Op-ZafoSuLv8'
+const VAPID_PUBLIC_KEY = import.meta.env.VITE_VAPID_PUBLIC_KEY as string | undefined
 
 function urlBase64ToUint8Array(base64String: string): Uint8Array {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
@@ -16,7 +16,7 @@ export function isNotificationSupported(): boolean {
 }
 
 export async function subscribeToPush(): Promise<PushSubscription | null> {
-  if (!isNotificationSupported()) return null
+  if (!isNotificationSupported() || !VAPID_PUBLIC_KEY) return null
 
   const permission = await Notification.requestPermission()
   if (permission !== 'granted') return null
