@@ -1,5 +1,5 @@
 self.addEventListener('push', (event) => {
-  let data = { title: 'AWAKEN', body: 'Time to reflect.', slot: 1 }
+  let data = { title: 'FLINCH', body: 'Time to reflect.', slot: 1 }
 
   if (event.data) {
     try {
@@ -18,7 +18,7 @@ self.addEventListener('push', (event) => {
     renotify: true,
   }
 
-  event.waitUntil(self.registration.showNotification(data.title || 'AWAKEN', options))
+  event.waitUntil(self.registration.showNotification(data.title || 'FLINCH', options))
 })
 
 self.addEventListener('notificationclick', (event) => {

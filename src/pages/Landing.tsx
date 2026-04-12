@@ -50,7 +50,7 @@ export default function Landing() {
         marginBottom: 'var(--space-line)',
         color: 'var(--ink)',
       }}>
-        AWAKEN
+        FLINCH
       </h1>
 
       <Divider variant="simple" />
@@ -63,7 +63,7 @@ export default function Landing() {
         marginBottom: 'var(--space-paragraph)',
         lineHeight: 1.65,
       }}>
-        Six times a day, Awaken sends you a question designed to break
+        Six times a day, Flinch sends you a question designed to break
         your autopilot. Not affirmations. Not tips. Hard questions that
         force you to notice what you're actually doing with your life —
         right now, in this moment.
