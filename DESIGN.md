@@ -1,20 +1,15 @@
-# Design System — Flinch
+# Design System — Awaken
 
 ## Product Context
-- **What this is:** A mobile-first web app that sends 6 daily psychological interrupt notifications, prompting users to confront autopilot behavior in real-time. Based on Dan Koe's 1-Day Life Reset Protocol, made daily.
+- **What this is:** A mobile-first web app that sends 6 daily psychological interrupt notifications, prompting users to confront autopilot behavior in real-time.
 - **Who it's for:** 20-30 test users in Phase 0; adults experiencing existential dissatisfaction who want a mirror, not a coach.
 - **Space/industry:** Self-awareness / psychological tools. Not wellness, not mindfulness, not productivity. Closest reference: @instance_11 / Second Nature (@secondnature.inc).
 - **Project type:** PWA (mobile-first web app)
 
-## Brand Name
-- **Name:** Flinch (formerly Awaken Soul)
-- **Why Flinch:** The involuntary reaction when truth hits. One syllable, physical, polarizing. Scored 4/4 on Lexicon Branding filters (distinctive, experiential, fluent, polarizing). "Awaken" failed 3/4 filters (6+ wellness apps share the name, wrong emotional register, not polarizing).
-- **Name x Aesthetic tension:** The name is fast and involuntary (a flinch is a split-second reaction). The grimoire aesthetic is slow and deliberate (a book you write in with care). This tension IS the product: the flinch is the moment the notification arrives and catches you. The grimoire is the record of what you do with that moment. Fast trigger, slow response.
-
 ## Aesthetic Direction
 - **Direction:** Grimoire / Scholarly Manuscript
 - **Decoration level:** Intentional — ornamental symbols and dividers serve as structural punctuation, not decoration for its own sake.
-- **Mood:** A private grimoire of self-examination. Scholarly weight. The gravity of a document that takes the reader seriously. The feeling of writing in a book that matters — not tapping into an app that gamifies your attention. The name "Flinch" provides the sharp entry point; the aesthetic provides the weighty container.
+- **Mood:** A private grimoire of self-examination. Scholarly weight. The gravity of a document that takes the reader seriously. The feeling of writing in a book that matters — not tapping into an app that gamifies your attention.
 - **Reference:** @instance_11 / Second Nature — heavy serif, paper grain, illuminated drop caps, typographic ornaments, dense text, square corners, monochrome palette.
 
 ### What this is NOT
@@ -247,5 +242,3 @@ The texture should be **visible** — not subtle. It's a key part of the aged pa
 | 2026-03-30 | Fixed schedule (no time pickers) | Phase 0 friction reduction: 6 time pickers added unnecessary friction. Default times are fine. Schedule saved as read-only display. |
 | 2026-03-30 | Removed PWA install prompt | The "Add to Home Screen" instruction wall blocked onboarding flow. Removed entirely to reduce friction. |
 | 2026-03-30 | Mono weight synced to 600 | DESIGN.md said 500, CSS shipped 600. Aligned doc to match what actually looks right on the parchment background. |
-| 2026-04-12 | Renamed: Awaken Soul → Flinch | "Awaken" failed Lexicon distinctiveness filter (6+ wellness apps). "Flinch" scored 4/4: involuntary truth reaction, one syllable, polarizing. Name x aesthetic tension is intentional: flinch = fast trigger, grimoire = slow response. |
-| 2026-04-12 | Name-aesthetic tension is a feature | The name captures the moment of being caught (fast, involuntary). The design captures the gravity of what you do about it (slow, deliberate). This mirrors the product: push notification → open the grimoire → write honestly. |
